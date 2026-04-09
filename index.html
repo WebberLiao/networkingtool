@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>NetTool - VS Code Edition</title>
+   <link rel="stylesheet" href="style.css">
+   <link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+   <div class="vscode-container">
+       <aside class="activity-bar">
+           <div class="icon active" onclick="showTool('ip-conv')">IP</div>
+           <div class="icon" onclick="showTool('subnet')">SN</div>
+           <div class="icon" onclick="showTool('mac-fmt')">MC</div>
+       </aside>
+
+       <main class="editor-area">
+           <div class="tabs">
+               <div class="tab active" id="tab-title">networking_tools.js</div>
+           </div>
+           
+           <div class="content">
+               <section id="ip-conv" class="tool-section">
+                   <h2 class="code-comment">// Convert Number to IPv4</h2>
+                   <div class="input-group">
+                       <span class="keyword">const</span> <span class="variable">inputNumber</span> = 
+                       <input type="number" id="num-input" placeholder="e.g. 3232235521" oninput="doIpConv()">;
+                   </div>
+                   <div class="result-box">
+                       <span class="keyword">return</span> <span class="string" id="ip-res">"0.0.0.0"</span>;
+                   </div>
+               </section>
+
+               <section id="subnet" class="tool-section" style="display:none;">
+                   <h2 class="code-comment">// Subnet Calculator</h2>
+                   <div class="input-line">
+                       <span class="keyword">let</span> IP = <input type="text" id="sn-ip" value="192.168.1.1">;
+                   </div>
+                   <div class="input-line">
+                       <span class="keyword">let</span> CIDR = <input type="number" id="sn-cidr" value="24" max="32">;
+                   </div>
+                   <button class="vsc-btn" onclick="doSubnet()">Calculate()</button>
+                   <div class="output-panel" id="sn-res">
+                       // Results will appear here...
+                   </div>
+               </section>
+
+               <section id="mac-fmt" class="tool-section" style="display:none;">
+                   <h2 class="code-comment">// MAC Address Formatter</h2>
+                   <textarea id="mac-input" placeholder="Enter MAC (e.g. 001122aabbcc)"></textarea>
+                   <div class="controls">
+                       Separator: 
+                       <select id="mac-sep" onchange="doMacFmt()">
+                           <option value=":">冒號 (:)</option>
+                           <option value="-">連字號 (-)</option>
+                           <option value=".">點 (.)</option>
+                       </select>
+                   </div>
+                   <div class="result-box">
+                       <span class="string" id="mac-res">00:00:00:00:00:00</span>
+                   </div>
+               </section>
+           </div>
+       </main>
+   </div>
+
+   <script src="script.js"></script>
+   <script>
+       if ('serviceWorker' in navigator) {
+           navigator.serviceWorker.register('./sw.js');
+       }
+   </script>
+</body>
+</html>
