@@ -57,3 +57,75 @@ function doMacFmt() {
        document.getElementById('mac-res').innerText = "Invalid MAC Length";
    }
 }
+
+// 自動更新當前時間戳
+setInterval(() => {
+   const el = document.getElementById('current-ts');
+   if(el) el.innerText = Math.floor(Date.now() / 1000);
+}, 1000);
+// 1. Unix Timestamp Converter
+function convertTS() {
+   const val = document.getElementById('ts-input').value.trim();
+   const resBox = document.getElementById('ts-res');
+   if (!val) return;
+   if (!isNaN(val)) {
+       // 數字轉時間
+       const date = new Date(parseInt(val) * (val.length === 10 ? 1000 : 1));
+       resBox.innerHTML = `<span class="string">"${date.toLocaleString()}"</span>`;
+   } else {
+       // 時間轉數字
+       const ts = Math.floor(new Date(val).getTime() / 1000);
+       resBox.innerHTML = isNaN(ts) ? "Invalid Date" : `<span class="vsc-green">${ts}</span>`;
+   }
+}
+// 2. Regex Checking
+function doRegex() {
+   const pattern = document.getElementById('re-pattern').value;
+   const text = document.getElementById('re-text').value;
+   const resBox = document.getElementById('re-res');
+   try {
+       const re = new RegExp(pattern, 'g');
+       const match = text.match(re);
+       resBox.innerHTML = match
+           ? `Matches: <span class="vsc-green">${JSON.stringify(match)}</span>`
+           : `Matches: <span class="string">null</span>`;
+   } catch (e) {
+       resBox.innerHTML = `<span style="color: #f44747;">Invalid Regex</span>`;
+   }
+}
+// 綁定事件
+document.getElementById('re-pattern')?.addEventListener('input', doRegex);
+document.getElementById('re-text')?.addEventListener('input', doRegex);
+// 3. JSON Beautify
+function beautifyJSON() {
+   const input = document.getElementById('json-input').value;
+   const resBox = document.getElementById('json-res');
+   try {
+       const obj = JSON.parse(input);
+       resBox.innerText = JSON.stringify(obj, null, 4);
+   } catch (e) {
+       resBox.innerText = "Error: Invalid JSON";
+   }
+}
+// 4. JSON to YAML
+function jsonToYaml() {
+   const input = document.getElementById('json-input').value;
+   const resBox = document.getElementById('json-res');
+   try {
+       const obj = JSON.parse(input);
+       resBox.innerText = jsyaml.dump(obj);
+   } catch (e) {
+       resBox.innerText = "Error: Invalid JSON for YAML conversion";
+   }
+}
+// 5. URL Encode/Decode
+function doUrlAction(type) {
+   const input = document.getElementById('url-input').value;
+   const resBox = document.getElementById('url-res');
+   try {
+       const res = (type === 'encode') ? encodeURIComponent(input) : decodeURIComponent(input);
+       resBox.innerText = res;
+   } catch (e) {
+       resBox.innerText = "Error in URL operation";
+   }
+}

@@ -6,6 +6,7 @@
    <title>NetTool - VS Code Edition</title>
    <link rel="stylesheet" href="style.css">
    <link rel="manifest" href="manifest.webmanifest">
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
 </head>
 <body>
    <div class="vscode-container">
@@ -13,6 +14,10 @@
            <div class="icon active" onclick="showTool('ip-conv')">IP</div>
            <div class="icon" onclick="showTool('subnet')">SN</div>
            <div class="icon" onclick="showTool('mac-fmt')">MC</div>
+           <div class="icon" onclick="showTool('timestamp')">TS</div>
+           <div class="icon" onclick="showTool('regex')">RE</div>
+           <div class="icon" onclick="showTool('json-tools')">JSON</div>
+           <div class="icon" onclick="showTool('url-tools')">URL</div>
        </aside>
 
        <main class="editor-area">
@@ -61,6 +66,51 @@
                        <span class="string" id="mac-res">00:00:00:00:00:00</span>
                    </div>
                </section>
+
+                <section id="timestamp" class="tool-section" style="display:none;">
+                    <h2 class="code-comment">// Unix Timestamp Converter</h2>
+                    <div class="input-line">
+                        <span class="keyword">let</span> now = <span class="variable" id="current-ts">loading...</span>;
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="ts-input" placeholder="Paste Timestamp or Date String">
+                        <button class="vsc-btn" onclick="convertTS()">Convert()</button>
+                    </div>
+                    <div class="result-box" id="ts-res">
+                        <span class="vsc-comment">// Result will be displayed here</span>
+                    </div>
+                </section>
+
+                <section id="regex" class="tool-section" style="display:none;">
+                    <h2 class="code-comment">// Regex Tester</h2>
+                    <input type="text" id="re-pattern" placeholder="Regex Pattern (e.g. ^[0-9]+$)" style="width: 100%; margin-bottom: 10px;">
+                    <textarea id="re-text" placeholder="Test String" style="width: 100%; height: 80px;"></textarea>
+                    <div class="result-box" id="re-res">
+                        Matches: <span class="string">false</span>
+                    </div>
+                </section>
+
+                <section id="json-tools" class="tool-section" style="display:none;">
+                    <h2 class="code-comment">// JSON Beautify & YAML Convert</h2>
+                    <textarea id="json-input" placeholder="Paste JSON here..." style="width: 100%; height: 150px;"></textarea>
+                    <div class="controls" style="margin-top: 10px;">
+                        <button class="vsc-btn" onclick="beautifyJSON()">Beautify JSON</button>
+                        <button class="vsc-btn" onclick="jsonToYaml()">To YAML</button>
+                    </div>
+                    <pre class="result-box" id="json-res" style="overflow-x: auto; color: var(--vsc-orange);">// Output...</pre>
+                </section>
+
+                <section id="url-tools" class="tool-section" style="display:none;">
+                    <h2 class="code-comment">// URL Encode / Decode</h2>
+                    <textarea id="url-input" placeholder="Enter URL or String" style="width: 100%; height: 80px;"></textarea>
+                    <div class="controls" style="margin-top: 10px;">
+                        <button class="vsc-btn" onclick="doUrlAction('encode')">Encode</button>
+                        <button class="vsc-btn" onclick="doUrlAction('decode')">Decode</button>
+                    </div>
+                    <div class="result-box" id="url-res" style="word-break: break-all;">
+                            // Result...
+                    </div>
+                </section>
            </div>
        </main>
    </div>
