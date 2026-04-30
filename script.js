@@ -138,7 +138,7 @@ function parseIPv6(str) {
 function formatIPv6(num) {
     const groups = [];
     for (let i = 7; i >= 0; i--) {
-        groups.unshift(((num >> BigInt(i * 16)) & 0xffffn).toString(16));
+        groups.push(((num >> BigInt(i * 16)) & 0xffffn).toString(16));
     }
     // Find longest zero run for :: compression
     let bestStart = -1, bestLen = 0, curStart = -1, curLen = 0;
