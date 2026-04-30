@@ -11,59 +11,94 @@
 <body>
    <div class="vscode-container">
        <aside class="activity-bar">
-           <div class="icon active" onclick="showTool('ip-conv')">IP</div>
-           <div class="icon" onclick="showTool('subnet')">SN</div>
-           <div class="icon" onclick="showTool('mac-fmt')">MC</div>
+           <div class="icon active" onclick="showTool('network-tools')">NET</div>
            <div class="icon" onclick="showTool('timestamp')">TS</div>
-           <div class="icon" onclick="showTool('regex')">RE</div>
-           <div class="icon" onclick="showTool('json-tools')">JSON</div>
-           <div class="icon" onclick="showTool('url-tools')">URL</div>
+           <div class="icon" onclick="showTool('format-tools')">FMT</div>
        </aside>
 
        <main class="editor-area">
            <div class="tabs">
-               <div class="tab active" id="tab-title">networking_tools.js</div>
+               <div class="tab active" id="tab-title">networking_tools</div>
            </div>
            
            <div class="content">
-               <section id="ip-conv" class="tool-section">
-                   <h2 class="code-comment">// Convert Number to IPv4</h2>
-                   <div class="input-group">
-                       <span class="keyword">const</span> <span class="variable">inputNumber</span> = 
-                       <input type="number" id="num-input" placeholder="e.g. 3232235521" oninput="doIpConv()">;
-                   </div>
-                   <div class="result-box">
-                       <span class="keyword">return</span> <span class="string" id="ip-res">"0.0.0.0"</span>;
-                   </div>
-               </section>
+               <section id="network-tools" class="tool-section">
+                   <div class="tool-grid">
+                       <div class="tool-card">
+                           <h2 class="code-comment">// Convert Number to IPv4</h2>
+                           <div class="input-group">
+                               <span class="keyword">const</span> <span class="variable">inputNumber</span> =
+                               <input type="number" id="num-input" placeholder="e.g. 3232235521" oninput="doIpConv()">
+                           </div>
+                           <div class="result-box">
+                               <span class="keyword">return</span> <span class="string" id="ip-res">"0.0.0.0"</span>;
+                           </div>
+                       </div>
 
-               <section id="subnet" class="tool-section" style="display:none;">
-                   <h2 class="code-comment">// Subnet Calculator</h2>
-                   <div class="input-line">
-                       <span class="keyword">let</span> IP = <input type="text" id="sn-ip" value="192.168.1.1">;
-                   </div>
-                   <div class="input-line">
-                       <span class="keyword">let</span> CIDR = <input type="number" id="sn-cidr" value="24" max="32">;
-                   </div>
-                   <button class="vsc-btn" onclick="doSubnet()">Calculate()</button>
-                   <div class="output-panel" id="sn-res">
-                       // Results will appear here...
-                   </div>
-               </section>
+                       <div class="tool-card">
+                           <h2 class="code-comment">// Subnet Calculator</h2>
+                           <div class="input-line">
+                               IP = <input type="text" id="sn-ip" value="192.168.1.1">
+                               <span class="keyword">/</span><input type="number" id="sn-cidr" value="24" max="32">
+                           </div>
+                           <button class="vsc-btn" onclick="doSubnet()">Calculate()</button>
+                           <div class="output-panel" id="sn-res">
+                               // Results will appear here...
+                           </div>
+                       </div>
 
-               <section id="mac-fmt" class="tool-section" style="display:none;">
-                   <h2 class="code-comment">// MAC Address Formatter</h2>
-                   <textarea id="mac-input" placeholder="Enter MAC (e.g. 001122aabbcc)"></textarea>
-                   <div class="controls">
-                       Separator: 
-                       <select id="mac-sep" onchange="doMacFmt()">
-                           <option value=":">冒號 (:)</option>
-                           <option value="-">連字號 (-)</option>
-                           <option value=".">點 (.)</option>
-                       </select>
-                   </div>
-                   <div class="result-box">
-                       <span class="string" id="mac-res">00:00:00:00:00:00</span>
+                       <div class="tool-card">
+                           <div class="card-split">
+                               <div class="card-half">
+                                   <h2 class="code-comment">// Convert Hex to IPv4</h2>
+                                   <div class="input-line">
+                                       <span class="keyword">let</span> Hex = <input type="text" id="hex-hex" value="">;
+                                   </div>
+                                   <button class="vsc-btn" onclick="doHexToIP()">HexToIPv4()</button>
+                                   <div class="result-box">
+                                       <span class="keyword">return</span> <span class="string" id="hex-ip">""</span>;
+                                   </div>
+                               </div>
+                               <div class="card-half">
+                                   <h2 class="code-comment">// Convert IPv4 to Hex</h2>
+                                   <div class="input-line">
+                                       <span class="keyword">let</span> IP = <input type="text" id="ip-input" value="">;
+                                   </div>
+                                   <button class="vsc-btn" onclick="doIpToHex()">IPv4ToHex()</button>
+                                   <div class="result-box">
+                                       <span class="keyword">return</span> <span class="string" id="ip-hex">""</span>;
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+
+                       <div class="tool-card">
+                           <h2 class="code-comment">// IPv6 Subnet Calculator</h2>
+                           <div class="input-line">
+                               IP = <input type="text" id="sn6-ip" value="2001:db8::1" style="width:220px">
+                               <span class="keyword">/</span><input type="number" id="sn6-prefix" value="64" min="0" max="128" style="width:60px">
+                           </div>
+                           <button class="vsc-btn" onclick="doSubnetIPv6()">Calculate()</button>
+                           <div class="output-panel" id="sn6-res">
+                               // Results will appear here...
+                           </div>
+                       </div>
+
+                       <div class="tool-card">
+                           <h2 class="code-comment">// MAC Address Formatter</h2>
+                           <textarea id="mac-input" placeholder="Enter MAC (e.g. 001122aabbcc)"></textarea>
+                           <div class="controls">
+                               Separator:
+                               <select id="mac-sep" onchange="doMacFmt()">
+                                   <option value=":">冒號 (:)</option>
+                                   <option value="-">連字號 (-)</option>
+                                   <option value=".">點 (.)</option>
+                               </select>
+                           </div>
+                           <div class="result-box">
+                               <span class="string" id="mac-res">00:00:00:00:00:00</span>
+                           </div>
+                       </div>
                    </div>
                </section>
 
@@ -81,16 +116,15 @@
                     </div>
                 </section>
 
-                <section id="regex" class="tool-section" style="display:none;">
+                <section id="format-tools" class="tool-section" style="display:none;">
                     <h2 class="code-comment">// Regex Tester</h2>
                     <input type="text" id="re-pattern" placeholder="Regex Pattern (e.g. ^[0-9]+$)" style="width: 100%; margin-bottom: 10px;">
                     <textarea id="re-text" placeholder="Test String" style="width: 100%; height: 80px;"></textarea>
                     <div class="result-box" id="re-res">
                         Matches: <span class="string">false</span>
                     </div>
-                </section>
 
-                <section id="json-tools" class="tool-section" style="display:none;">
+                    <hr class="tool-divider">
                     <h2 class="code-comment">// JSON Beautify & YAML Convert</h2>
                     <textarea id="json-input" placeholder="Paste JSON here..." style="width: 100%; height: 150px;"></textarea>
                     <div class="controls" style="margin-top: 10px;">
@@ -98,9 +132,8 @@
                         <button class="vsc-btn" onclick="jsonToYaml()">To YAML</button>
                     </div>
                     <pre class="result-box" id="json-res" style="overflow-x: auto; color: var(--vsc-orange);">// Output...</pre>
-                </section>
 
-                <section id="url-tools" class="tool-section" style="display:none;">
+                    <hr class="tool-divider">
                     <h2 class="code-comment">// URL Encode / Decode</h2>
                     <textarea id="url-input" placeholder="Enter URL or String" style="width: 100%; height: 80px;"></textarea>
                     <div class="controls" style="margin-top: 10px;">

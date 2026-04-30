@@ -53,9 +53,37 @@ body, html {
 
 .content {
    padding: 30px; line-height: 1.6;
+   overflow-y: auto; flex: 1;
+}
+
+.tool-grid {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 20px;
+}
+
+.tool-card {
+   background: #252526;
+   border: 1px solid #3c3c3c;
+   border-radius: 4px;
+   padding: 20px;
+}
+
+.tool-card--wide {
+   grid-column: span 2;
+}
+
+.card-split {
+   display: flex;
+   gap: 20px;
+}
+
+.card-half {
+   flex: 1;
 }
 
 .code-comment { color: var(--vsc-comment); font-size: 16px; margin-bottom: 20px; }
+.tool-divider { border: none; border-top: 1px solid #3c3c3c; margin: 28px 0; }
 .keyword { color: var(--vsc-blue); }
 .variable { color: #9cdcfe; }
 .string { color: var(--vsc-orange); }
