@@ -114,15 +114,87 @@ input:focus { border-color: #007acc; }
 }
 
 pre.result-box {
-   white-space: pre-wrap;       /* 讓 JSON 能換行 */
+   white-space: pre-wrap;       /* è® JSON è½æè¡ */
    word-wrap: break-word;
    font-size: 13px;
-   max-height: 400px;           /* 限制高度並允許捲動 */
+   max-height: 400px;           /* éå¶é«åº¦ä¸¦åè¨±æ²å */
    overflow-y: auto;
 }
 textarea {
    min-height: 80px;
-   resize: vertical;            /* 允許垂直拉伸 */
+   resize: vertical;            /* åè¨±åç´æä¼¸ */
    width: 100%;
    box-sizing: border-box;
+}
+
+/* Diff ä½å± */
+.diff-input-wrapper {
+   display: flex;
+   gap: 10px;
+}
+.diff-editor {
+   flex: 1;
+   display: flex;
+   background: #1e1e1e;
+   border: 1px solid #3c3c3c;
+   border-radius: 4px;
+   overflow: hidden;
+}
+.diff-editor textarea {
+   flex: 1;
+   height: 360px;
+   font-size: 12px;
+   line-height: 1.5;
+   padding: 6px 8px;
+   border: none;
+   background: #1e1e1e;
+   resize: vertical;
+   overflow: auto;
+   min-height: unset;
+   white-space: pre;
+   overflow-wrap: normal;
+}
+.diff-view {
+   font-family: 'Consolas', monospace;
+   white-space: pre;
+   overflow-x: auto;
+   line-height: 1.5;
+   background: #1e1e1e;
+   padding: 10px;
+}
+/* Diff è¡æ¨£å¼ */
+.diff-line, .diff-removed, .diff-added, .diff-hunk {
+   display: flex;
+   align-items: baseline;
+   width: 100%;
+}
+.diff-ln {
+   min-width: 38px;
+   padding: 0 6px;
+   text-align: right;
+   color: #858585;
+   background: #252526;
+   border-right: 1px solid #3c3c3c;
+   user-select: none;
+   flex-shrink: 0;
+   font-size: 11px;
+}
+.diff-content {
+   padding-left: 8px;
+   white-space: pre;
+   flex: 1;
+   overflow: hidden;
+}
+.diff-removed {
+   background-color: rgba(244, 71, 71, 0.2);
+   color: #f44747;
+}
+.diff-added {
+   background-color: rgba(49, 67, 41, 0.8);
+   color: #b5cea8;
+}
+.diff-hunk {
+   color: #569cd6;
+   background: rgba(86, 156, 214, 0.1);
+   font-style: italic;
 }
