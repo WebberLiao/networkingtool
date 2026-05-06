@@ -14,6 +14,7 @@
            <div class="icon active" onclick="showTool('network-tools')">NET</div>
            <div class="icon" onclick="showTool('timestamp')">TS</div>
            <div class="icon" onclick="showTool('format-tools')">FMT</div>
+           <div class="icon" onclick="showTool('text-diff')">DF</div>
        </aside>
 
        <main class="editor-area">
@@ -90,9 +91,9 @@
                            <div class="controls">
                                Separator:
                                <select id="mac-sep" onchange="doMacFmt()">
-                                   <option value=":">冒號 (:)</option>
-                                   <option value="-">連字號 (-)</option>
-                                   <option value=".">點 (.)</option>
+                                   <option value=":">ĺč (:)</option>
+                                   <option value="-">éŁĺ­č (-)</option>
+                                   <option value=".">éť (.)</option>
                                </select>
                            </div>
                            <div class="result-box">
@@ -142,6 +143,24 @@
                     </div>
                     <div class="result-box" id="url-res" style="word-break: break-all;">
                             // Result...
+                    </div>
+                </section>
+
+                <section id="text-diff" class="tool-section" style="display:none;">
+                    <h2 class="code-comment">// Text Diff (git-style)</h2>
+                    <div class="diff-container">
+                        <div class="diff-input-wrapper">
+                            <div class="diff-editor">
+                                <textarea id="diff-old" placeholder="Original Text (Old)" wrap="off"></textarea>
+                            </div>
+                            <div class="diff-editor">
+                                <textarea id="diff-new" placeholder="Changed Text (New)" wrap="off"></textarea>
+                            </div>
+                        </div>
+                        <button class="vsc-btn" onclick="doDiff()" style="width: 100%; margin: 10px 0;">Compare Differences</button>
+                        <div id="diff-output" class="result-box diff-view">
+                            // Comparison result will appear here...
+                        </div>
                     </div>
                 </section>
            </div>
