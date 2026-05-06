@@ -181,11 +181,11 @@ function convertTS() {
    const resBox = document.getElementById('ts-res');
    if (!val) return;
    if (!isNaN(val)) {
-       // 數字轉時間
+       // æ¸å­è½æé
        const date = new Date(parseInt(val) * (val.length === 10 ? 1000 : 1));
        resBox.innerHTML = `<span class="string">"${date.toLocaleString()}"</span>`;
    } else {
-       // 時間轉數字
+       // æéè½æ¸å­
        const ts = Math.floor(new Date(val).getTime() / 1000);
        resBox.innerHTML = isNaN(ts) ? "Invalid Date" : `<span class="vsc-green">${ts}</span>`;
    }
@@ -240,4 +240,75 @@ function doUrlAction(type) {
    } catch (e) {
        resBox.innerText = "Error in URL operation";
    }
+}
+
+function doDiff() {
+   const oldLines = document.getElementById('diff-old').value.split('\n');
+   const newLines = document.getElementById('diff-new').value.split('\n');
+   const output = document.getElementById('diff-output');
+   const CONTEXT = 3;
+
+   // Build LCS table
+   const m = oldLines.length, n = newLines.length;
+   const dp = Array.from({ length: m + 1 }, () => new Int32Array(n + 1));
+   for (let i = 1; i <= m; i++) {
+       for (let j = 1; j <= n; j++) {
+           dp[i][j] = oldLines[i-1] === newLines[j-1]
+               ? dp[i-1][j-1] + 1
+               : Math.max(dp[i-1][j], dp[i][j-1]);
+       }
+   }
+
+   // Backtrack to produce diff ops
+   const ops = [];
+   let i = m, j = n;
+   while (i > 0 || j > 0) {
+       if (i > 0 && j > 0 && oldLines[i-1] === newLines[j-1]) {
+           ops.push({ type: 'eq',  line: oldLines[i-1], oldN: i, newN: j }); i--; j--;
+       } else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
+           ops.push({ type: 'ins', line: newLines[j-1], oldN: null, newN: j }); j--;
+       } else {
+           ops.push({ type: 'del', line: oldLines[i-1], oldN: i, newN: null }); i--;
+       }
+   }
+   ops.reverse();
+
+   // Mark which lines are within CONTEXT distance of a change
+   const changed = ops.map(op => op.type !== 'eq');
+   const inContext = ops.map((_, idx) => {
+       if (changed[idx]) return true;
+       for (let d = 1; d <= CONTEXT; d++) {
+           if (changed[idx - d] || changed[idx + d]) return true;
+       }
+       return false;
+   });
+
+   const ln = n => `<span class="diff-ln">${n !== null ? n : ''}</span>`;
+   let resultHtml = '';
+   let lastShown = true;
+   for (let k = 0; k < ops.length; k++) {
+       const op = ops[k];
+       if (!inContext[k]) {
+           if (lastShown) {
+               resultHtml += `<span class="diff-hunk">${ln(null)}${ln(null)}<span class="diff-content">@@ ... @@</span></span>\n`;
+               lastShown = false;
+           }
+           continue;
+       }
+       lastShown = true;
+       if (op.type === 'eq') {
+           resultHtml += `<span class="diff-line">${ln(op.oldN)}${ln(op.newN)}<span class="diff-content">  ${escapeHtml(op.line)}</span></span>\n`;
+       } else if (op.type === 'del') {
+           resultHtml += `<span class="diff-removed">${ln(op.oldN)}${ln(null)}<span class="diff-content">- ${escapeHtml(op.line)}</span></span>\n`;
+       } else {
+           resultHtml += `<span class="diff-added">${ln(null)}${ln(op.newN)}<span class="diff-content">+ ${escapeHtml(op.line)}</span></span>\n`;
+       }
+   }
+   output.innerHTML = resultHtml || '// No differences found.';
+}
+// é²æ­¢ HTML æ³¨å¥çå®å¨å½å¼
+function escapeHtml(text) {
+   const div = document.createElement('div');
+   div.textContent = text;
+   return div.innerHTML;
 }
