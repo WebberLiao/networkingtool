@@ -198,3 +198,64 @@ textarea {
    background: rgba(86, 156, 214, 0.1);
    font-style: italic;
 }
+/* AI Translate & Grammar Improvement */
+/* AI Tools */
+.ai-login-card {
+   max-width: 360px;
+   margin: 60px auto;
+   background: #252526;
+   border: 1px solid #3c3c3c;
+   border-radius: 4px;
+   padding: 30px;
+}
+
+.ai-login-card .input-group {
+   margin-bottom: 14px;
+}
+
+.ai-login-card label {
+   display: block;
+   margin-bottom: 4px;
+}
+
+.ai-login-card input {
+   width: 100%;
+   box-sizing: border-box;
+   padding: 8px;
+}
+
+.ai-error {
+   margin-top: 12px;
+   color: #f44747;
+   font-size: 13px;
+}
+
+#ai-main .input-group {
+   margin-bottom: 14px;
+}
+
+#ai-main .input-group label {
+   display: block;
+   margin-bottom: 4px;
+}
+
+.vsc-btn-sm {
+   padding: 4px 10px;
+   font-size: 12px;
+   margin-left: 6px;
+   margin-top: 6px;
+}
+
+.ai-loading {
+   margin-left: 12px;
+   color: #569cd6;
+   font-style: italic;
+   font-size: 13px;
+}
+
+#ai-result pre {
+   font-family: 'Consolas', 'Monaco', monospace;
+   font-size: 13px;
+   line-height: 1.6;
+}
+/* AI Translate & Grammar Improvement */
