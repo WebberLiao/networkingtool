@@ -163,6 +163,54 @@
                         </div>
                     </div>
                 </section>
+                <!-- AI Translate & Grammar Improvement -->
+                <section id="ai-tools" class="tool-section" style="display:none;">
+                    <!-- Login Gate -->
+                    <div id="ai-login-gate">
+                        <div class="ai-login-card">
+                            <h2 class="code-comment">// Authentication Required</h2>
+                            <div class="input-group">
+                                <label class="keyword">Username:</label>
+                                <input type="text" id="ai-username" placeholder="Enter username" autocomplete="off">
+                            </div>
+                            <div class="input-group">
+                                <label class="keyword">Password:</label>
+                                <input type="password" id="ai-password" placeholder="Enter password" autocomplete="off">
+                            </div>
+                            <button class="vsc-btn" onclick="doAiLogin()">Login()</button>
+                            <div id="ai-login-err" class="ai-error" style="display:none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- AI Tool (hidden until login) -->
+                    <div id="ai-main" style="display:none;">
+                        <h2 class="code-comment">// AI Translate & Grammar Improvement</h2>
+                        <div class="tool-card">
+                            <div class="input-group">
+                                <label class="keyword">API Key:</label>
+                                <input type="password" id="ai-apikey" placeholder="Enter Claude API Key" style="width:100%;">
+                                <button class="vsc-btn vsc-btn-sm" onclick="toggleApiKeyVisibility()">Show</button>
+                                <button class="vsc-btn vsc-btn-sm" onclick="saveApiKey()">Save</button>
+                            </div>
+
+                            <hr class="tool-divider">
+
+                            <div class="input-group">
+                                <label class="keyword">Input Text</label>
+                                <span class="code-comment" style="font-size:12px;">// 輸入繁體中文或英文</span>
+                                <textarea id="ai-text-input" placeholder="輸入繁體中文 → 翻譯成英文並改善語法&#10;Enter English → 翻譯成繁體中文並改善語法" style="width:100%; height:120px;"></textarea>
+                            </div>
+
+                            <button class="vsc-btn" onclick="doAiTranslate()" id="ai-translate-btn">翻譯及改善語法()</button>
+                            <span id="ai-loading" class="ai-loading" style="display:none;">Processing...</span>
+
+                            <div class="result-box" id="ai-result">
+                                <span class="code-comment">// 結果將顯示在此...</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- AI Translate & Grammar Improvement -->
            </div>
        </main>
    </div>
