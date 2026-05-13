@@ -306,9 +306,144 @@ function doDiff() {
    }
    output.innerHTML = resultHtml || '// No differences found.';
 }
-// é²æ­¢ HTML æ³¨å¥çå®å¨å½å¼
+// Prevent HTML inject
 function escapeHtml(text) {
    const div = document.createElement('div');
    div.textContent = text;
    return div.innerHTML;
 }
+
+/* AI Translate & Grammar Improvement */
+// ========== AI Tools - Login & Translation ==========
+// SHA-256 hash helper
+async function sha256(text) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Expected credential hashes (SHA-256)
+const AI_CRED_HASHES = {
+    user: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
+    pass: '5f0a4ec58d66573c0b46e2656a75d6b988865702642ae08684a5391e287752bc'
+};
+
+// Login handler
+async function doAiLogin() {
+    const username = document.getElementById('ai-username').value.trim();
+    const password = document.getElementById('ai-password').value;
+    const errEl = document.getElementById('ai-login-err');
+
+    if (!username || !password) {
+        errEl.textContent = 'Error: Please enter both username and password.';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    const userHash = await sha256(username);
+    const passHash = await sha256(password);
+
+    if (userHash === AI_CRED_HASHES.user && passHash === AI_CRED_HASHES.pass) {
+        document.getElementById('ai-login-gate').style.display = 'none';
+        document.getElementById('ai-main').style.display = 'block';
+        errEl.style.display = 'none';
+        // Load saved API key if exists
+        const savedKey = localStorage.getItem('ai_apikey');
+        if (savedKey) {
+            document.getElementById('ai-apikey').value = savedKey;
+        }
+    } else {
+        errEl.textContent = 'Error: Invalid credentials.';
+        errEl.style.display = 'block';
+    }
+}
+
+// Allow Enter key to trigger login
+document.addEventListener('DOMContentLoaded', () => {
+    const passField = document.getElementById('ai-password');
+    if (passField) {
+        passField.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') doAiLogin();
+        });
+    }
+});
+
+// Toggle API key visibility
+function toggleApiKeyVisibility() {
+    const input = document.getElementById('ai-apikey');
+    input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// Save API key to localStorage
+function saveApiKey() {
+    const key = document.getElementById('ai-apikey').value.trim();
+    if (key) {
+        localStorage.setItem('ai_apikey', key);
+        alert('API Key saved.');
+    }
+}
+
+// AI Translation via Claude API
+async function doAiTranslate() {
+    const apiKey = document.getElementById('ai-apikey').value.trim();
+    const inputText = document.getElementById('ai-text-input').value.trim();
+    const resultEl = document.getElementById('ai-result');
+    const loadingEl = document.getElementById('ai-loading');
+    const btn = document.getElementById('ai-translate-btn');
+
+    if (!apiKey) {
+        resultEl.innerHTML = '<span style="color:#f44747;">Error: Please enter an API Key.</span>';
+        return;
+    }
+    if (!inputText) {
+        resultEl.innerHTML = '<span style="color:#f44747;">Error: Please enter text to translate.</span>';
+        return;
+    }
+
+    // Detect language direction
+    const isChinese = /[\u4e00-\u9fff\u3400-\u4dbf]/.test(inputText);
+    const systemPrompt = isChinese
+        ? 'You are a professional translator and grammar expert. The user will provide text in Traditional Chinese. Please: 1) Translate it into natural, fluent English. 2) If there are grammar or expression issues in the original Chinese, point them out. Return the result in this format:\n\n**English Translation:**\n[translation]\n\n**Grammar Notes (if any):**\n[notes]'
+        : 'You are a professional translator and grammar expert. The user will provide text in English. Please: 1) Translate it into natural, fluent Traditional Chinese (繁體中文). 2) If there are grammar or expression issues in the original English, point them out and provide a corrected version. Return the result in this format:\n\n**繁體中文翻譯:**\n[translation]\n\n**Grammar Notes / Corrected English (if any):**\n[notes]';
+
+    // Show loading state
+    btn.disabled = true;
+    loadingEl.style.display = 'inline';
+    resultEl.innerHTML = '<span class="code-comment">// Calling Claude API...</span>';
+
+    try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true'
+            },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 1024,
+                messages: [
+                    { role: 'user', content: inputText }
+                ],
+                system: systemPrompt
+            })
+        });
+
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error?.message || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const content = data.content?.[0]?.text || 'No response received.';
+        resultEl.innerHTML = `<pre style="white-space:pre-wrap; color:var(--vsc-green); margin:0;">${escapeHtml(content)}</pre>`;
+    } catch (err) {
+        resultEl.innerHTML = `<span style="color:#f44747;">Error: ${escapeHtml(err.message)}</span>`;
+    } finally {
+        btn.disabled = false;
+        loadingEl.style.display = 'none';
+    }
+}
+/* AI Translate & Grammar Improvement */
